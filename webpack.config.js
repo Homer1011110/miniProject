@@ -44,6 +44,7 @@ const config = {
         port: 8088,
         colors: true,
         compress: true,
+        disableHostCheck: false,
     }
 }
 
