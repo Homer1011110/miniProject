@@ -12,6 +12,8 @@ class App {
         let point = new BMap.Point(116.404, 39.915);
         self.map.centerAndZoom(point, 15);
 
+        self.map.addControl(new BMap.GeolocationControl())
+
         self.getCurrentPosition(function(point) {
             let mark = new BMap.Marker(point)
             self.map.addOverlay(mark)
@@ -31,7 +33,9 @@ class App {
                 alert(`failed:${this.getStatus()}`)
             }
         })
-        /*navigator.geolocation && navigator.geolocation.getCurrentPosition(function(pos) {
+        /*
+        // Note: getCurrentPosition() cannot work on insecure site origin
+        navigator.geolocation && navigator.geolocation.getCurrentPosition(function(pos) {
             let currentLat = pos.coords.latitude
             let currentLon = pos.coords.longitude
             let gpsPoint = new BMap.Point(currentLon, currentLat)
@@ -39,7 +43,8 @@ class App {
             self.converCoordinate(gpsPoint, function(point) {
                 cb.call(null, point)
             })
-        })*/
+        })
+        */
     }
 
     converCoordinate(point, cb) {
