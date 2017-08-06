@@ -1,47 +1,70 @@
 class Promise {
     constructor(cb) {
         let self = this
-        self.STATE_PENDING = 0
-        self.STATE_FULFILLED = 1
-        self.STATE_REJECTED = 2
+        self.STATE_CREATED = 0
+        self.STATE_PENDING = 1
+        self.STATE_FULFILLED = 2
+        self.STATE_REJECTED = 3
 
-        self.state = self.STATE_PENDING
-        self.successCBs = []
-        self.failCBs = []
+        self._state = self.STATE_CREATED
+        self.successCB = null
+        self.failCB = null
 
-        cb.call(null, function(msg) {
-            self.resolve(msg)
-        }, function(err) {
-            self.reject(err)
-        })
+        if(cb) {
+            cb && cb.call(null, function(msg) {
+                self.resolve(msg)
+            }, function(err) {
+                self.reject(err)
+            })
+            self._state = self.STATE_PENDING
+        }
+    }
 
+    get state() {
+        return this._state
     }
 
     then(successCB, failCB) {
         let self = this
-        successCB && self.successCBs.push(successCB)
-        failCB && self.failCBs.push(failCB)
-        return self
+        self.successCB = successCB || null
+        self.failCB = failCB || null
+        self.nextPromise = new Promise()
+        return self.nextPromise
     }
 
     resolve(msg) {
         let self = this
-        self.state = self.STATE_FULFILLED
+        self._state = self.STATE_FULFILLED
 
-        self.successCBs.forEach(function(cb) {
-            cb.call(self, msg)
-        })
+        if(self.successCB) {
+            let result = self.successCB.call(self, msg)
+            result instanceof Promise && self.setNextPromise(result)
+        }
     }
 
     reject(err) {
         let self = this
-        self.state = self.STATE_REJECTED
+        self._state = self.STATE_REJECTED
 
-        self.failCBs.foreach(function(cb) {
-            cb.call(self, err)
-        })
+        if(self.failCB) {
+            let result = self.failCB.call(self, err)
+            result instanceof Promise && self.setNextPromise(result)
+        }
     }
 
+    setNextPromise(promise) {
+        let self = this
+
+        if(!self.nextPromise) {
+            return
+        }
+
+        promise.successCB = self.nextPromise.successCB || null
+        promise.failCB = self.nextPromise.failCB || null
+        promise.nextPromise = self.nextPromise || null
+
+        self.nextPromise = promise
+    }
 }
 
 export default Promise
