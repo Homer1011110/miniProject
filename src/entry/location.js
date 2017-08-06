@@ -23,15 +23,15 @@ class App {
         let self = this;
         let geolocation = new BMap.Geolocation()
 
-        /*geolocation.getCurrentPosition(function(res) {
+        geolocation.getCurrentPosition(function(res) {
             if(this.getStatus() == BMAP_STATUS_SUCCESS) {
                 // cb 的 this 是否应该指向 app ?
                 cb.call(self, res.point)
             } else {
                 alert(`failed:${this.getStatus()}`)
             }
-        })*/
-        navigator.geolocation && navigator.geolocation.getCurrentPosition(function(pos) {
+        })
+        /*navigator.geolocation && navigator.geolocation.getCurrentPosition(function(pos) {
             let currentLat = pos.coords.latitude
             let currentLon = pos.coords.longitude
             let gpsPoint = new BMap.Point(currentLon, currentLat)
@@ -39,8 +39,7 @@ class App {
             self.converCoordinate(gpsPoint, function(point) {
                 cb.call(null, point)
             })
-            // cb.call(null, gpsPoint)
-        })
+        })*/
     }
 
     converCoordinate(point, cb) {
