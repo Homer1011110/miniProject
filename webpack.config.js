@@ -5,7 +5,6 @@ const entryDir = path.join(__dirname, "/src/entry")
 const nodeModulesDir = path.join(__dirname, "node_modules")
 
 const config = {
-    watch: true,
     entry: {
         location: path.join(entryDir, "location.js")
     },
