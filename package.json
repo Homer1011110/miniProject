@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "webpack --progress --watch",
         "build-release": "webpack --progress",
-        "local": "webpack-dev-server --progress"
+        "local": "webpack-dev-server --progress --public"
     },
     "author": "",
     "license": "ISC",
