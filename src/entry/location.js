@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 class App {
     constructor() {
         this.initVariables()
@@ -15,8 +17,12 @@ class App {
         self.map.addControl(new BMap.GeolocationControl())
 
         self.getCurrentPosition(function(point) {
-            let mark = new BMap.Marker(point)
-            self.map.addOverlay(mark)
+            let marker = new BMap.Marker(point)  // 创建标注
+            let circle = new BMap.Circle(point, 1000)
+            circle.setStrokeWeight(1)
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE) //跳动的动画
+            self.map.addOverlay(marker)
+            self.map.addOverlay(circle)
             self.map.panTo(point)
         })
     }
@@ -57,6 +63,9 @@ class App {
         })
     }
 
+    getNearbyMoment(type) {
+
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
