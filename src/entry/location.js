@@ -31,7 +31,7 @@ class App {
             let circle = new BMap.Circle(point, 1000)
             circle.setStrokeWeight(1)
             marker.setAnimation(BMAP_ANIMATION_BOUNCE) //跳动的动画
-            // self.map.addOverlay(marker)
+            self.map.addOverlay(marker)
             self.map.addOverlay(circle)
             self.map.panTo(point)
         })
@@ -94,8 +94,12 @@ class App {
             let resp = {
                 ret: 20000,
                 moments: [
-                        {lng: 113.94189292426, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
                         {lng: 113.94189292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94189292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94189292435, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94189292440, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94189292456, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
                 ],
                 msg: 'xxx'
             }
