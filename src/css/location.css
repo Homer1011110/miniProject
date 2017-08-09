@@ -6,6 +6,7 @@
 
 html, body, .body{
     height: 100%;
+    position: relative;
 }
 
 .container {
@@ -14,4 +15,32 @@ html, body, .body{
 
 .anchorBL {
     /*display: none;*/
+}
+
+.radio-group {
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    font-size: 0;
+}
+
+.radio-group .radio {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, .3);
+    border-radius: 25px;
+}
+
+.radio-group .radio-active {
+    color: white;
+    background-color: rgba(51, 153, 255, .6);
 }

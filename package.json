@@ -12,7 +12,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.16.2"
+        "axios": "^0.16.2",
+        "zeptojs": "^1.1.4"
     },
     "devDependencies": {
         "babel-core": "^6.21.0",
