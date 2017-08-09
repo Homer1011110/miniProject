@@ -8,8 +8,13 @@ class App {
         this.bindEvent()
     }
     initVariables() {
+        this.UPDATE_POSITION = 1
+        this.UPDATE_NEAR_POINTS = 2
+      
         this.map = new BMap.Map("map");
         this.radioGroup = new RadioGroup($('#radio-group'), 'friends')
+        this.myPoint = {lng: 113.94289892826, lat: 22.5356489579}
+        this.nearPoints = []
     }
 
     bindEvent() {
@@ -26,14 +31,10 @@ class App {
 
         self.map.addControl(new BMap.GeolocationControl())
 
-        self.getCurrentPosition(function(point) {
-            let marker = new BMap.Marker(point)  // 创建标注
-            let circle = new BMap.Circle(point, 1000)
-            circle.setStrokeWeight(1)
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE) //跳动的动画
-            self.map.addOverlay(marker)
-            self.map.addOverlay(circle)
-            self.map.panTo(point)
+        self.getCurrentPosition(function({lng, lat}) {
+            self.myPoint = {lng, lat}
+            debugger
+            self.update(self.UPDATE_POSITION)
         })
     }
 
@@ -53,23 +54,13 @@ class App {
         geolocation.getCurrentPosition(function(res) {
             if(this.getStatus() == BMAP_STATUS_SUCCESS) {
                 // cb 的 this 是否应该指向 app ?
-                console.log(res.point)
                 cb.call(self, res.point)
             } else {
                 alert(`failed:${this.getStatus()}`)
             }
         })
         /*
-        // Note: getCurrentPosition() cannot work on insecure site origin
-        navigator.geolocation && navigator.geolocation.getCurrentPosition(function(pos) {
-            let currentLat = pos.coords.latitude
-            let currentLon = pos.coords.longitude
-            let gpsPoint = new BMap.Point(currentLon, currentLat)
-
-            self.converCoordinate(gpsPoint, function(point) {
-                cb.call(null, point)
-            })
-        })
+          Note: getCurrentPosition() cannot work on insecure site origin
         */
     }
 
@@ -103,13 +94,14 @@ class App {
                 ],
                 msg: 'xxx'
             }
-            self.renderNearbyDots(resp.moments)
+            self.nearPoints = resp.moments
+            self.update(self.UPDATE_NEAR_POINTS)
         })
     }
-    renderNearbyDots(moments) {
+    renderNearbyDots() {
         let self = this
-        moments.forEach(({lng, lat, momentID})=> {
-            console.log(lng, lat)
+        self.nearPoints.forEach(({lng, lat, momentID})=> {
+            // console.log(lng, lat)
             let point = new BMap.Point(lng, lat)
             let marker = new BMap.Marker(point)
             marker.addEventListener('click', function() {
@@ -117,6 +109,30 @@ class App {
             })
             self.map.addOverlay(marker)
         })
+    }
+    renderMyPosition() {
+      let self = this
+      let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
+      let marker = new BMap.Marker(point)
+      let circle = new BMap.Circle(point, 1000)
+      circle.setStrokeWeight(1)
+      marker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
+      self.map.addOverlay(marker)
+      self.map.addOverlay(circle)
+      self.map.panTo(point)
+    }
+    update(type='null') {
+      let self = this
+      switch(type) {
+        case self.UPDATE_POSITION:
+          self.renderMyPosition()
+          break
+        case self.UPDATE_NEAR_POINTS:
+          self.renderNearbyDots()
+          break
+        default:
+          break
+      }
     }
 }
 
