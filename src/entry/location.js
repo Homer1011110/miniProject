@@ -10,11 +10,12 @@ class App {
     initVariables() {
         this.UPDATE_POSITION = 1
         this.UPDATE_NEAR_POINTS = 2
-      
+
         this.map = new BMap.Map("map");
         this.radioGroup = new RadioGroup($('#radio-group'), 'friends')
         this.myPoint = {lng: 113.94289892826, lat: 22.5356489579}
         this.nearPoints = []
+        this.nearMarkers = []
     }
 
     bindEvent() {
@@ -33,7 +34,6 @@ class App {
 
         self.getCurrentPosition(function({lng, lat}) {
             self.myPoint = {lng, lat}
-            debugger
             self.update(self.UPDATE_POSITION)
         })
     }
@@ -60,18 +60,8 @@ class App {
             }
         })
         /*
-          Note: getCurrentPosition() cannot work on insecure site origin
+            Note: getCurrentPosition() cannot work on insecure site origin
         */
-    }
-
-    converCoordinate(point, cb) {
-        let convertor = new BMap.Convertor()
-        let pointArr = [point]
-        convertor.translate(pointArr, 1, 5, function(data) {
-            if(data.status === 0) {
-                cb.call(null, data.points[0])
-            }
-        })
     }
 
     getNearbyMoments(type) {
@@ -94,45 +84,56 @@ class App {
                 ],
                 msg: 'xxx'
             }
+            self.clearNearMarkers()
             self.nearPoints = resp.moments
+            self.nearMarkers = self.nearPoints.map(({lng, lat, momentID})=> {
+                let point = new BMap.Point(lng, lat)
+                let marker = new BMap.Marker(point)
+                marker.addEventListener('click', function() {
+                    self.onMarkerClick(momentID)
+                })
+                return marker
+            })
             self.update(self.UPDATE_NEAR_POINTS)
         })
     }
     renderNearbyDots() {
         let self = this
-        self.nearPoints.forEach(({lng, lat, momentID})=> {
-            // console.log(lng, lat)
-            let point = new BMap.Point(lng, lat)
-            let marker = new BMap.Marker(point)
-            marker.addEventListener('click', function() {
-                self.onMarkerClick(momentID)
-            })
+        self.nearMarkers.forEach((marker)=> {
             self.map.addOverlay(marker)
         })
     }
     renderMyPosition() {
-      let self = this
-      let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
-      let marker = new BMap.Marker(point)
-      let circle = new BMap.Circle(point, 1000)
-      circle.setStrokeWeight(1)
-      marker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
-      self.map.addOverlay(marker)
-      self.map.addOverlay(circle)
-      self.map.panTo(point)
+        let self = this
+        let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
+        let marker = new BMap.Marker(point)
+        let circle = new BMap.Circle(point, 1000)
+        circle.setStrokeWeight(1)
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
+        self.map.addOverlay(marker)
+        self.map.addOverlay(circle)
+        self.map.panTo(point)
+    }
+    clearNearMarkers() {
+        let self = this
+        self.nearMarkers.forEach(function(marker) {
+            self.map.removeOverlay(marker)
+        })
+        self.nearPoints = []
+        self.nearMarkers = []
     }
     update(type='null') {
-      let self = this
-      switch(type) {
-        case self.UPDATE_POSITION:
-          self.renderMyPosition()
-          break
-        case self.UPDATE_NEAR_POINTS:
-          self.renderNearbyDots()
-          break
-        default:
-          break
-      }
+        let self = this
+        switch(type) {
+            case self.UPDATE_POSITION:
+            self.renderMyPosition()
+            break
+            case self.UPDATE_NEAR_POINTS:
+            self.renderNearbyDots()
+            break
+            default:
+            break
+        }
     }
 }
 
