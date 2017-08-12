@@ -3,9 +3,15 @@ import $ from 'zeptojs'
 
 class App {
     constructor() {
+        this.initData()
         this.initVariables()
         this.initBMap()
         this.bindEvent()
+    }
+    initData() {
+        /*
+            call handler to get openid and accessToken
+        */
     }
     initVariables() {
         this.UPDATE_POSITION = 1
@@ -38,9 +44,9 @@ class App {
         })
     }
 
-    onRadioChange(id) {
+    onRadioChange(radioId) {
         let self = this
-        self.getNearbyMoments(id)
+        self.getNearbyMoments(radioId)
     }
 
     onMarkerClick(momentID) {
@@ -66,8 +72,13 @@ class App {
 
     getNearbyMoments(type) {
         let self = this
-        axios.get('/moments', {
-            params: {}
+        axios.get('/find/nearby', {
+            params: {
+                openid: 'xxx',
+                lng: 11,
+                lat: 11,
+                type: type
+            }
         }).then((resp)=> {
             console.log(resp)
         }).catch((err)=> {
@@ -76,11 +87,8 @@ class App {
                 ret: 20000,
                 moments: [
                         {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94189292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94189292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94189292435, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94189292440, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94189292456, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
                 ],
                 msg: 'xxx'
             }

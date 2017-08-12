@@ -56,3 +56,11 @@ class CheckBox {
 document.addEventListener("DOMContentLoaded", function() {
     let app = new App()
 })
+
+/*bridge.registerHandler("getPublishFormData", function(data, responseCallback) {
+    responseCallback({
+        ding: true,
+        addMine: true,
+        addAll: true
+    })
+})*/
