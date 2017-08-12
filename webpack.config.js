@@ -6,7 +6,8 @@ const nodeModulesDir = path.join(__dirname, "node_modules")
 
 const config = {
     entry: {
-        location: path.join(entryDir, "location.js")
+        location: path.join(entryDir, "location.js"),
+        publish: path.join(entryDir, "publish.js")
     },
     output: {
         filename: "[name].js",
@@ -19,13 +20,6 @@ const config = {
                 loader: "babel-loader",
                 exclude: [nodeModulesDir]
             },
-            /*{
-                test: /\.vue$/,
-                loader: "vue-loader",
-                options: {
-                transformToRequire: {img: ""}
-                }
-            }*/
         ]
     },
     resolve: {
