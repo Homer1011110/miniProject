@@ -12,11 +12,6 @@ class App extends BaseApp {
         this.nearPoints = []
         this.nearMarkers = []
     }
-    // initMap() {
-    //     super.initMap()
-    //     let self = this
-    //     self.map.addControl(new BMap.GeolocationControl())
-    // }
     bindEvent() {
         super.bindEvent()
         let self = this
@@ -49,30 +44,40 @@ class App extends BaseApp {
             }
         }).then((resp)=> {
             console.log(resp)
+            self.resp2Action(resp)
         }).catch((err)=> {
             console.log(err)
-            let resp = {
-                ret: 20000,
-                moments: [
-                        {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                ],
-                msg: 'xxx'
-            }
-
-            self.clearNearMarkers() // should go in self.renderxxx
-            self.nearPoints = resp.moments
-            self.nearMarkers = self.nearPoints.map(({lng, lat, momentID})=> {
-                let point = new BMap.Point(lng, lat)
-                let marker = new BMap.Marker(point)
-                marker.addEventListener('click', function() {
-                    self.onMarkerClick(momentID)
-                })
-                return marker
-            })
-            self.update('renderNearbyMoments')
+            alert(err)
         })
+    }
+    code2Action(resp) {
+        let self = this
+        switch(resp.ret) {
+            case -6:
+                self.showReminder('无法获取您的QQ好友列表')
+                break
+            case -7:
+                self.showReminder('无法获取您的QQ信息')
+                break
+            case -8:
+                self.showReminder('您尚未登录，请登录后再试')
+                break
+            case 0:
+                self._renderNearbyMoments(data)
+        }
+    }
+    _renderNearbyMoments(data) {
+        self.clearNearMarkers() // should go in self.renderxxx
+        self.nearPoints = data.moments
+        self.nearMarkers = self.nearPoints.map(({lng, lat, momentID})=> {
+            let point = new BMap.Point(lng, lat)
+            let marker = new BMap.Marker(point)
+            marker.addEventListener('click', function() {
+                self.onMarkerClick(momentID)
+            })
+            return marker
+        })
+        self.update('renderNearbyMoments')
     }
     renderNearbyMoments() {
         let self = this
@@ -99,22 +104,24 @@ class App extends BaseApp {
         self.nearPoints = []
         self.nearMarkers = []
     }
+    showReminder(msg) {
+        let self = this
+        self.bridge.callHandler('showReminder', msg, function responseCallback(responseData) {
+            console.log("JS received response:", responseData)
+        })
+    }
 }
 
 
-setupWebViewJavascriptBridge(function(bridge) {
-	
-    /* Initialize your app here */
-    
-        // DOM fully loaded and parsed
+document.addEventListener('DOMContentLoaded', function() {
+    FastClick.attach(document.body)
+    let bridge = {}
+    setupWebViewJavascriptBridge(function(bridge) {
+        // webviewjavascriptbridge
         let app = new App(bridge)
-    
-
-	// bridge.registerHandler('JS Echo', function(data, responseCallback) {
-	// 	console.log("JS Echo called with:", data)
-	// 	responseCallback(data)
-	// })
-	// bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-	// 	console.log("JS received response:", responseData)
-	// })
+    })
 })
+
+window.onerror = function(err) {
+    // report error
+}

@@ -113,7 +113,7 @@ html, body, .wrapper{
     border-radius: 50%;
     box-shadow: 1px 1px 5px #ccc;
     background-color: white;
-    transition: left .5s ease, right .5s ease;
+    transition: left .25s ease, right .25s ease;
 }
 .switcher.active .switcher-button {
     left: 20px;

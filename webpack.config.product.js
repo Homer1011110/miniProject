@@ -29,8 +29,7 @@ const config = {
         new copyWebpackPlugin([
             {from: "./src/imgs", to: "../imgs"},
             {from: "./src/template", to: "../html"},
-            {from: "./src/css", to: "../css"},
-            {from: "./src/js", to: "../js"},
+            {from: "./src/css", to: "../css"}
         ])
     ],
     devServer: {

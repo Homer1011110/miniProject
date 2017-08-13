@@ -73,7 +73,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(9);
+var bind = __webpack_require__(10);
 var isBuffer = __webpack_require__(34);
 
 /*global toString:true*/
@@ -378,32 +378,6 @@ module.exports = {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    search2Map: function search2Map(searchString) {
-        // todo: detect param type
-        var map = {};
-        var index = searchString.indexOf('?');
-        searchString = searchString.substr(index + 1);
-        if (searchString.length <= 0) return map;
-        var paramArr = searchString.split('&');
-        paramArr.forEach(function (param) {
-            var arr = param.split('=');
-            map[arr[0]] = arr[1];
-        });
-        return map;
-    }
-};
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.4 - zepto event ajax form ie - zeptojs.com/license */
@@ -1988,7 +1962,141 @@ module.exports = Zepto
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    search2Map: function search2Map(searchString) {
+        // todo: detect param type
+        var map = {};
+        var index = searchString.indexOf('?');
+        searchString = searchString.substr(index + 1);
+        if (searchString.length <= 0) return map;
+        var paramArr = searchString.split('&');
+        paramArr.forEach(function (param) {
+            var arr = param.split('=');
+            map[arr[0]] = arr[1];
+        });
+        return map;
+    }
+};
+
+/***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _zeptojs = __webpack_require__(1);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+var _util = __webpack_require__(2);
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var App = function () {
+    function App(bridge) {
+        _classCallCheck(this, App);
+
+        this.initVariables(bridge);
+        this.initMap();
+        this.bindEvent();
+        this.registerHandler();
+    }
+
+    _createClass(App, [{
+        key: 'initVariables',
+        value: function initVariables(bridge) {
+            var self = this;
+            self.bridge = bridge;
+            self.urlParams = _util2.default.search2Map(window.location.search);
+            self.myPoint = { lng: 116.404, lat: 39.915 };
+            self.map = new BMap.Map("map");
+        }
+    }, {
+        key: 'initMap',
+        value: function initMap() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            self.map.centerAndZoom(point, 15);
+
+            self.getCurrentPosition(function (_ref) {
+                var lng = _ref.lng,
+                    lat = _ref.lat;
+
+                self.myPoint = { lng: lng, lat: lat };
+                self.update('renderMyPosition');
+            });
+        }
+    }, {
+        key: 'getCurrentPosition',
+        value: function getCurrentPosition(cb) {
+            var self = this;
+            var geolocation = new BMap.Geolocation();
+
+            geolocation.getCurrentPosition(function (res) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    // cb 的 this 是否应该指向 app ?
+                    cb.call(self, res.point);
+                } else {
+                    alert('failed:' + this.getStatus());
+                }
+            });
+            /*
+                Note: getCurrentPosition() cannot work on insecure site origin
+            */
+        }
+    }, {
+        key: 'bindEvent',
+        value: function bindEvent() {}
+    }, {
+        key: 'renderMyPosition',
+        value: function renderMyPosition() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            var marker = new BMap.Marker(point);
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
+            self.map.addOverlay(marker);
+            self.map.panTo(point);
+        }
+    }, {
+        key: 'update',
+        value: function update(fnName) {
+            var self = this;
+            if (typeof self[fnName] == 'function') {
+                self[fnName]();
+            }
+        }
+    }, {
+        key: 'registerHandler',
+        value: function registerHandler() {}
+    }]);
+
+    return App;
+}();
+
+exports.default = App;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2018,7 +2126,7 @@ function setupWebViewJavascriptBridge(callback) {
 exports.default = setupWebViewJavascriptBridge;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2041,10 +2149,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(5);
+    adapter = __webpack_require__(6);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(5);
+    adapter = __webpack_require__(6);
   }
   return adapter;
 }
@@ -2115,10 +2223,10 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2129,7 +2237,7 @@ var settle = __webpack_require__(21);
 var buildURL = __webpack_require__(24);
 var parseHeaders = __webpack_require__(30);
 var isURLSameOrigin = __webpack_require__(28);
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(23);
 
 module.exports = function xhrAdapter(config) {
@@ -2303,10 +2411,10 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2332,7 +2440,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2344,7 +2452,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2369,7 +2477,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2387,7 +2495,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -2577,118 +2685,10 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(15);
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _zeptojs = __webpack_require__(2);
-
-var _zeptojs2 = _interopRequireDefault(_zeptojs);
-
-var _util = __webpack_require__(1);
-
-var _util2 = _interopRequireDefault(_util);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var App = function () {
-    function App(bridge) {
-        _classCallCheck(this, App);
-
-        this.initVariables(bridge);
-        this.initMap();
-        this.bindEvent();
-        this.registerHandler();
-    }
-
-    _createClass(App, [{
-        key: 'initVariables',
-        value: function initVariables(bridge) {
-            var self = this;
-            self.bridge = bridge;
-            self.urlParams = _util2.default.search2Map(window.location.search);
-            self.myPoint = { lng: 116.404, lat: 39.915 };
-            self.map = new BMap.Map("map");
-        }
-    }, {
-        key: 'initMap',
-        value: function initMap() {
-            var self = this;
-            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
-            self.map.centerAndZoom(point, 15);
-
-            self.getCurrentPosition(function (_ref) {
-                var lng = _ref.lng,
-                    lat = _ref.lat;
-
-                self.myPoint = { lng: lng, lat: lat };
-                self.update('renderMyPosition');
-            });
-        }
-    }, {
-        key: 'getCurrentPosition',
-        value: function getCurrentPosition(cb) {
-            var self = this;
-            var geolocation = new BMap.Geolocation();
-
-            geolocation.getCurrentPosition(function (res) {
-                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                    // cb 的 this 是否应该指向 app ?
-                    cb.call(self, res.point);
-                } else {
-                    alert('failed:' + this.getStatus());
-                }
-            });
-            /*
-                Note: getCurrentPosition() cannot work on insecure site origin
-            */
-        }
-    }, {
-        key: 'bindEvent',
-        value: function bindEvent() {}
-    }, {
-        key: 'renderMyPosition',
-        value: function renderMyPosition() {
-            var self = this;
-            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
-            var marker = new BMap.Marker(point);
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
-            self.map.addOverlay(marker);
-            self.map.panTo(point);
-        }
-    }, {
-        key: 'update',
-        value: function update(fnName) {
-            var self = this;
-            if (typeof self[fnName] == 'function') {
-                self[fnName]();
-            }
-        }
-    }, {
-        key: 'registerHandler',
-        value: function registerHandler() {}
-    }]);
-
-    return App;
-}();
-
-exports.default = App;
+module.exports = __webpack_require__(15);
 
 /***/ }),
 /* 13 */,
@@ -2704,7 +2704,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _zeptojs = __webpack_require__(2);
+var _zeptojs = __webpack_require__(1);
 
 var _zeptojs2 = _interopRequireDefault(_zeptojs);
 
@@ -2759,9 +2759,9 @@ exports.default = RadioGroup;
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(9);
+var bind = __webpack_require__(10);
 var Axios = __webpack_require__(17);
-var defaults = __webpack_require__(4);
+var defaults = __webpack_require__(5);
 
 /**
  * Create an instance of Axios
@@ -2794,9 +2794,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(6);
+axios.Cancel = __webpack_require__(7);
 axios.CancelToken = __webpack_require__(16);
-axios.isCancel = __webpack_require__(7);
+axios.isCancel = __webpack_require__(8);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -2817,7 +2817,7 @@ module.exports.default = axios;
 "use strict";
 
 
-var Cancel = __webpack_require__(6);
+var Cancel = __webpack_require__(7);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -2881,7 +2881,7 @@ module.exports = CancelToken;
 "use strict";
 
 
-var defaults = __webpack_require__(4);
+var defaults = __webpack_require__(5);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(18);
 var dispatchRequest = __webpack_require__(19);
@@ -3035,8 +3035,8 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(22);
-var isCancel = __webpack_require__(7);
-var defaults = __webpack_require__(4);
+var isCancel = __webpack_require__(8);
+var defaults = __webpack_require__(5);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -3147,7 +3147,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -3603,19 +3603,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _axios = __webpack_require__(11);
+var _axios = __webpack_require__(12);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _zeptojs = __webpack_require__(2);
+var _zeptojs = __webpack_require__(1);
 
 var _zeptojs2 = _interopRequireDefault(_zeptojs);
 
-var _baseApp = __webpack_require__(12);
+var _baseApp = __webpack_require__(3);
 
 var _baseApp2 = _interopRequireDefault(_baseApp);
 
-var _util = __webpack_require__(1);
+var _util = __webpack_require__(2);
 
 var _util2 = _interopRequireDefault(_util);
 
@@ -3623,7 +3623,7 @@ var _radiogroup = __webpack_require__(14);
 
 var _radiogroup2 = _interopRequireDefault(_radiogroup);
 
-var _jsBridge = __webpack_require__(3);
+var _jsBridge = __webpack_require__(4);
 
 var _jsBridge2 = _interopRequireDefault(_jsBridge);
 
@@ -3652,12 +3652,6 @@ var App = function (_BaseApp) {
             this.nearPoints = [];
             this.nearMarkers = [];
         }
-        // initMap() {
-        //     super.initMap()
-        //     let self = this
-        //     self.map.addControl(new BMap.GeolocationControl())
-        // }
-
     }, {
         key: 'bindEvent',
         value: function bindEvent() {
@@ -3698,30 +3692,48 @@ var App = function (_BaseApp) {
                 }
             }).then(function (resp) {
                 console.log(resp);
+                self.resp2Action(resp);
             }).catch(function (err) {
                 console.log(err);
-                var resp = {
-                    ret: 20000,
-                    moments: [{ lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }, { lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }, { lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }],
-                    msg: 'xxx'
-                };
-
-                self.clearNearMarkers(); // should go in self.renderxxx
-                self.nearPoints = resp.moments;
-                self.nearMarkers = self.nearPoints.map(function (_ref) {
-                    var lng = _ref.lng,
-                        lat = _ref.lat,
-                        momentID = _ref.momentID;
-
-                    var point = new BMap.Point(lng, lat);
-                    var marker = new BMap.Marker(point);
-                    marker.addEventListener('click', function () {
-                        self.onMarkerClick(momentID);
-                    });
-                    return marker;
-                });
-                self.update('renderNearbyMoments');
+                alert(err);
             });
+        }
+    }, {
+        key: 'code2Action',
+        value: function code2Action(resp) {
+            var self = this;
+            switch (resp.ret) {
+                case -6:
+                    self.showReminder('无法获取您的QQ好友列表');
+                    break;
+                case -7:
+                    self.showReminder('无法获取您的QQ信息');
+                    break;
+                case -8:
+                    self.showReminder('您尚未登录，请登录后再试');
+                    break;
+                case 0:
+                    self._renderNearbyMoments(data);
+            }
+        }
+    }, {
+        key: '_renderNearbyMoments',
+        value: function _renderNearbyMoments(data) {
+            self.clearNearMarkers(); // should go in self.renderxxx
+            self.nearPoints = data.moments;
+            self.nearMarkers = self.nearPoints.map(function (_ref) {
+                var lng = _ref.lng,
+                    lat = _ref.lat,
+                    momentID = _ref.momentID;
+
+                var point = new BMap.Point(lng, lat);
+                var marker = new BMap.Marker(point);
+                marker.addEventListener('click', function () {
+                    self.onMarkerClick(momentID);
+                });
+                return marker;
+            });
+            self.update('renderNearbyMoments');
         }
     }, {
         key: 'renderNearbyMoments',
@@ -3754,26 +3766,31 @@ var App = function (_BaseApp) {
             self.nearPoints = [];
             self.nearMarkers = [];
         }
+    }, {
+        key: 'showReminder',
+        value: function showReminder(msg) {
+            var self = this;
+            self.bridge.callHandler('showReminder', msg, function responseCallback(responseData) {
+                console.log("JS received response:", responseData);
+            });
+        }
     }]);
 
     return App;
 }(_baseApp2.default);
 
-(0, _jsBridge2.default)(function (bridge) {
-
-    /* Initialize your app here */
-
-    // DOM fully loaded and parsed
-    var app = new App(bridge);
-
-    // bridge.registerHandler('JS Echo', function(data, responseCallback) {
-    // 	console.log("JS Echo called with:", data)
-    // 	responseCallback(data)
-    // })
-    // bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-    // 	console.log("JS received response:", responseData)
-    // })
+document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body);
+    var bridge = {};
+    (0, _jsBridge2.default)(function (bridge) {
+        // webviewjavascriptbridge
+        var app = new App(bridge);
+    });
 });
+
+window.onerror = function (err) {
+    // report error
+};
 
 /***/ }),
 /* 33 */,

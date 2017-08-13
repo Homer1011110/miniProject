@@ -27,35 +27,28 @@ class App extends BaseApp{
     }
     registerHandler() {
         let self = this
-        // self.bridge.registerHandler('getPublishFormData', function(data, responseCallback) {
-        //     console.log("getPublishFormData called with:", data)
-        //     responseCallback({
-        //         lat: self.myPoint.lat,
-        //         lng: self.myPoint.lng,
-        //         ding: self.dingCheckBox.checked,
-        //         addMine: self.addMineCheckBox.checked,
-        //         addAll: self.addAllCheckBox.checked,
-        //     })
-        // })
+        self.bridge.registerHandler('getPublishFormData', function(data, responseCallback) {
+            console.log("getPublishFormData called with:", data)
+            responseCallback({
+                lat: self.myPoint.lat,
+                lng: self.myPoint.lng,
+                ding: self.dingCheckBox.checked,
+                addMine: self.addMineCheckBox.checked,
+                addAll: self.addAllCheckBox.checked,
+            })
+        })
     }
 }
 
-
-
-
-setupWebViewJavascriptBridge(function(bridge) {
-	
-    /* Initialize your app here */
-    
-        // DOM fully loaded and parsed
+document.addEventListener('DOMContentLoaded', function() {
+    FastClick.attach(document.body)
+    let bridge = {}
+    setupWebViewJavascriptBridge(function(bridge) {
+        // webviewjavascriptbridge
         let app = new App(bridge)
-    
-
-	// bridge.registerHandler('JS Echo', function(data, responseCallback) {
-	// 	console.log("JS Echo called with:", data)
-	// 	responseCallback(data)
-	// })
-	// bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-	// 	console.log("JS received response:", responseData)
-	// })
+    })
 })
+
+window.onerror = function(err) {
+    // report error
+}
