@@ -1,0 +1,121 @@
+html, body, .wrapper{
+    height: 100%;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.map-container {
+    flex: 1;
+}
+.form-container {
+    height: 296px;
+    box-shadow: -1px 0 2px #888;
+}
+.publish-form {
+    background-color: #ccc;
+}
+.p-f-item {
+    position: relative;
+    padding: 15px 25px;
+    background-color: white;
+    margin-bottom: 1px;
+}
+.p-f-item .i-label {
+    margin-right: 100px;
+}
+.i-label .l-title{
+    font-size: 18px;
+    line-height: 26px;
+    color: #4c4f73;
+}
+.i-label .l-desc {
+    font-size: 12px;
+    line-height: 17px;
+    color: #9b9b9b;
+}
+.i-input {
+    position: absolute;
+    right: 27px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.friend-list {
+}
+.f-l-item {
+    padding: 12px 25px;
+    position: relative;
+    background-color: #f8f8f8;
+}
+.f-l-i-name {
+    font-size: 18px;
+    line-height: 25px;
+    color: #4c4f7c;
+}
+.f-l-i-input {
+    position: absolute;
+    right: 27px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/*
+    check box
+*/
+
+.check-box {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 2px solid #9b9b9b;
+    border-radius: 50%;
+    position: relative;
+}
+.check-box-inner {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    margin-bottom: 1px;
+    display: none;
+}
+.check-box.active {
+    border: 0;
+}
+.check-box.active .check-box-inner {
+    display: block;
+}
+
+/*
+    switcher
+*/
+.switcher {
+    width: 52px;
+    height: 32px;
+    border-radius: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    position: relative;
+    overflow: hidden;
+}
+.switcher.active {
+    background-color: #4cd964;
+    border: 1px solid #4cd964;
+}
+.switcher-button {
+    position: absolute;
+    top: 0;
+    left: 1px;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #ccc;
+    background-color: white;
+    transition: left .5s ease, right .5s ease;
+}
+.switcher.active .switcher-button {
+    left: 20px;
+    box-shadow: -1px 1px 5px #ccc;
+}

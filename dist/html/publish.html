@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../css/publish.css" rel="stylesheet">
+        <link href="../css/reset.css" rel="stylesheet">
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=P5oGaZvbXAdLIn2SPMqxYtNZR1Wv9k3I"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div id="map" class="map-container"></div>
+            <div class="form-container">
+                <div class="publish-form">
+                    <div class="p-f-item">
+                        <div class="i-label">
+                            <div class="l-title">Ding在当前位置</div>
+                            <div class="l-desc">仅好友到此处可见</div>
+                        </div>
+                        <div class="i-input">
+                            <div id="ding" class="switcher">
+                                <div class="switcher-button"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-f-item">
+                        <div class="i-label">
+                            <div class="l-title">添加到我的故事</div>
+                            <div class="l-desc">仅好友可见</div>
+                        </div>
+                        <div class="i-input">
+                            <div id="add-mine" class="switcher">
+                                <div class="switcher-button"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-f-item">
+                        <div class="i-label">
+                            <div class="l-title">添加到这里的故事</div>
+                            <div class="l-desc">所有来到这里的人可见</div>
+                        </div>
+                        <div class="i-input">
+                            <div id="add-all" class="switcher">
+                                <div class="switcher-button"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-f-item">
+                        <div class="i-label">
+                            <div class="l-title">发送给好友</div>
+                            <div class="l-desc">和好友分享这美好一刻吧</div>
+                        </div>
+                        <div class="i-input">
+                            <div id="share-friends" class="switcher">
+                                <div class="switcher-button"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="friend-list">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="template-wrapper">
+            <template id="friend-template">
+                <div class="f-l-item">
+                    <div class="f-l-i-inner">
+                        <div class="f-l-i-name">Nolanfu</div>
+                        <div class="f-l-i-input">
+                            <div class="check-box">
+                                <img src="../imgs/checkbox.png" class="check-box-inner">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <script src="../js/publish.js"></script>
+    </body>
+</html>
