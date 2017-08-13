@@ -3700,8 +3700,7 @@ var App = function (_BaseApp) {
                     type: type
                 }
             }).then(function (resp) {
-                console.log(resp);
-                self.resp2Action(resp);
+                self.resp2Action(resp.data);
             }).catch(function (err) {
                 console.log(err);
                 alert(err);

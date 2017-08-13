@@ -44,8 +44,7 @@ class App extends BaseApp {
                 type: type
             }
         }).then((resp)=> {
-            console.log(resp)
-            self.resp2Action(resp)
+            self.resp2Action(resp.data)
         }).catch((err)=> {
             console.log(err)
             alert(err)
