@@ -50,7 +50,7 @@ class App extends BaseApp {
             alert(err)
         })
     }
-    code2Action(resp) {
+    resp2Action(resp) {
         let self = this
         switch(resp.ret) {
             case -6:

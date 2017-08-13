@@ -1779,7 +1779,7 @@ var App = function () {
         this.initVariables(bridge);
         this.initMap();
         this.bindEvent();
-        this.registerHandler();
+        // this.registerHandler()
     }
 
     _createClass(App, [{
@@ -1789,7 +1789,9 @@ var App = function () {
             self.bridge = bridge;
             self.urlParams = _util2.default.search2Map(window.location.search);
             self.myPoint = { lng: 116.404, lat: 39.915 };
+            self.myMarker = null;
             self.map = new BMap.Map("map");
+            self.geolocation = new BMap.Geolocation();
         }
     }, {
         key: 'initMap',
@@ -1798,9 +1800,18 @@ var App = function () {
             var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
             self.map.centerAndZoom(point, 15);
 
-            self.getCurrentPosition(function (_ref) {
-                var lng = _ref.lng,
-                    lat = _ref.lat;
+            setInterval(function () {
+                self.getCurrentPosition(function (_ref) {
+                    var lng = _ref.lng,
+                        lat = _ref.lat;
+
+                    self.myPoint = { lng: lng, lat: lat };
+                    self.update('renderMyPosition');
+                });
+            }, 5 * 1000);
+            self.getCurrentPosition(function (_ref2) {
+                var lng = _ref2.lng,
+                    lat = _ref2.lat;
 
                 self.myPoint = { lng: lng, lat: lat };
                 self.update('renderMyPosition');
@@ -1810,9 +1821,8 @@ var App = function () {
         key: 'getCurrentPosition',
         value: function getCurrentPosition(cb) {
             var self = this;
-            var geolocation = new BMap.Geolocation();
 
-            geolocation.getCurrentPosition(function (res) {
+            self.geolocation.getCurrentPosition(function (res) {
                 if (this.getStatus() == BMAP_STATUS_SUCCESS) {
                     // cb 的 this 是否应该指向 app ?
                     cb.call(self, res.point);
@@ -1820,9 +1830,6 @@ var App = function () {
                     alert('failed:' + this.getStatus());
                 }
             });
-            /*
-                Note: getCurrentPosition() cannot work on insecure site origin
-            */
         }
     }, {
         key: 'bindEvent',
@@ -1832,9 +1839,10 @@ var App = function () {
         value: function renderMyPosition() {
             var self = this;
             var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
-            var marker = new BMap.Marker(point);
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
-            self.map.addOverlay(marker);
+            self.myMarker && self.map.removeOverlay(self.myMarker);
+            self.myMarker = new BMap.Marker(point);
+            self.myMarker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
+            self.map.addOverlay(self.myMarker);
             self.map.panTo(point);
         }
     }, {
@@ -1916,22 +1924,6 @@ var App = function (_BaseApp) {
             self.shareFriendCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#share-friends'));
         }
     }, {
-        key: 'initMap',
-        value: function initMap() {
-            var self = this;
-            var point = new BMap.Point(116.404, 39.915);
-            self.map.centerAndZoom(point, 15);
-
-            self.getCurrentPosition(function (_ref) {
-                var lng = _ref.lng,
-                    lat = _ref.lat;
-
-                console.log(lng, lat);
-                self.myPoint = { lng: lng, lat: lat };
-                self.update('renderMyPosition');
-            });
-        }
-    }, {
         key: 'registerHandler',
         value: function registerHandler() {
             var self = this;
@@ -1953,7 +1945,7 @@ var App = function (_BaseApp) {
 
 document.addEventListener('DOMContentLoaded', function () {
     FastClick.attach(document.body);
-    // let bridge = {}
+    var bridge = {};
     (0, _jsBridge2.default)(function (bridge) {
         // webviewjavascriptbridge
         var app = new App(bridge);

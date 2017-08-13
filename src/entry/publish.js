@@ -14,17 +14,6 @@ class App extends BaseApp{
         self.addAllCheckBox = new CheckBox($('#add-all'))
         self.shareFriendCheckBox = new CheckBox($('#share-friends'))
     }
-    initMap() {
-        let self = this
-        let point = new BMap.Point(116.404, 39.915);
-        self.map.centerAndZoom(point, 15);
-
-        self.getCurrentPosition(function({lng, lat}) {
-            console.log(lng, lat)
-            self.myPoint = {lng, lat}
-            self.update('renderMyPosition')
-        })
-    }
     registerHandler() {
         let self = this
         self.bridge.registerHandler('getPublishFormData', function(data, responseCallback) {
@@ -42,7 +31,7 @@ class App extends BaseApp{
 
 document.addEventListener('DOMContentLoaded', function() {
     FastClick.attach(document.body)
-    // let bridge = {}
+    let bridge = {}
     setupWebViewJavascriptBridge(function(bridge) {
         // webviewjavascriptbridge
         let app = new App(bridge)
