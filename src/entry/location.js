@@ -1,19 +1,19 @@
 import axios from 'axios'
 import $ from 'zeptojs'
+import util from '../base/util'
+import RadioGroup from '../components/radiogroup'
+import setupWebViewJavascriptBridge from '../base/jsBridge'
 
 class App {
-    constructor() {
-        this.initData()
-        this.initVariables()
+    constructor(bridge) {
+        this.initVariables(bridge)
         this.initBMap()
         this.bindEvent()
     }
-    initData() {
-        /*
-            call handler to get openid and accessToken
-        */
-    }
-    initVariables() {
+    initVariables(bridge) {
+        this.bridge = bridge
+        this.urlParams = util.search2Map(window.location.search)
+
         this.UPDATE_POSITION = 1
         this.UPDATE_NEAR_POINTS = 2
 
@@ -23,14 +23,12 @@ class App {
         this.nearPoints = []
         this.nearMarkers = []
     }
-
     bindEvent() {
         let self = this
         this.radioGroup.onRadioChange = function(args) {
             self.onRadioChange(args)
         }
     }
-
     initBMap() {
         let self = this
         let point = new BMap.Point(116.404, 39.915);
@@ -43,16 +41,20 @@ class App {
             self.update(self.UPDATE_POSITION)
         })
     }
-
     onRadioChange(radioId) {
         let self = this
         self.getNearbyMoments(radioId)
     }
-
     onMarkerClick(momentID) {
+        /*
+            call handler to show moment
+        */
         console.log(momentID)
+        let self = this
+        self.bridge.callHandler('jumpToVideoWithMoment', momentID, function(responseData) {
+            console.log("JS received response:", responseData)
+        })
     }
-
     getCurrentPosition(cb) {
         let self = this;
         let geolocation = new BMap.Geolocation()
@@ -69,7 +71,6 @@ class App {
             Note: getCurrentPosition() cannot work on insecure site origin
         */
     }
-
     getNearbyMoments(type) {
         let self = this
         axios.get('/find/nearby', {
@@ -134,42 +135,35 @@ class App {
         let self = this
         switch(type) {
             case self.UPDATE_POSITION:
-            self.renderMyPosition()
-            break
+                self.renderMyPosition()
+                break
             case self.UPDATE_NEAR_POINTS:
-            self.renderNearbyDots()
-            break
+                self.renderNearbyDots()
+                break
             default:
-            break
+                break
         }
     }
 }
 
-class RadioGroup {
-    constructor($dom, activeRadioId='friends') {
-        let self = this
-        this.$radios = $dom.find('.radio')
-        this.bindEvent()
-        $dom.find(`[data-radio-id=${activeRadioId}]`).addClass('radio-active')
-        setTimeout(function() {
-            self.onRadioChange(activeRadioId)
-        },  1)
-    }
-    bindEvent() {
-        let self = this
-        this.$radios.on('click', function(e) {
-            let $this = $(this)
-            self.$radios.removeClass('radio-active')
-            $this.addClass('radio-active')
-            self.onRadioChange($this.attr('data-radio-id'))
-        })
-    }
-    changeRadio() {}
-    onRadioChange(radioId) {}
-}
 
-document.addEventListener("DOMContentLoaded", function() {
-    // DOM fully loaded and parsed
-    let app = new App()
+
+setupWebViewJavascriptBridge(function(bridge) {
+
+	/* Initialize your app here */
+    document.addEventListener("DOMContentLoaded", function() {
+        // DOM fully loaded and parsed
+        let app = new App(bridge)
+    })
+
+    /*
+        register js handler
+    */
+	/*bridge.registerHandler('JS Echo', function(data, responseCallback) {
+		console.log("JS Echo called with:", data)
+		responseCallback(data)
+	})
+	bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
+		console.log("JS received response:", responseData)
+	})*/
 })
-

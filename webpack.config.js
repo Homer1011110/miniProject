@@ -39,6 +39,8 @@ const config = {
         colors: true,
         compress: true,
         disableHostCheck: true,
+
+        
     }
 }
 
