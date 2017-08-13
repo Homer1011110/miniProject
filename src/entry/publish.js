@@ -6,7 +6,7 @@ import setupWebViewJavascriptBridge from '../base/jsBridge'
 
 class App extends BaseApp{
     initVariables(bridge) {
-        super.initVariables()
+        super.initVariables(bridge)
         let self = this
 
         self.dingCheckBox = new CheckBox($('#ding'))

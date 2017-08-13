@@ -1907,7 +1907,7 @@ var App = function (_BaseApp) {
     _createClass(App, [{
         key: 'initVariables',
         value: function initVariables(bridge) {
-            _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'initVariables', this).call(this);
+            _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'initVariables', this).call(this, bridge);
             var self = this;
 
             self.dingCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#ding'));
