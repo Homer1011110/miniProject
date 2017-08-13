@@ -1953,7 +1953,7 @@ var App = function (_BaseApp) {
 
 document.addEventListener('DOMContentLoaded', function () {
     FastClick.attach(document.body);
-    var bridge = {};
+    // let bridge = {}
     (0, _jsBridge2.default)(function (bridge) {
         // webviewjavascriptbridge
         var app = new App(bridge);
