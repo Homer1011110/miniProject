@@ -3693,9 +3693,10 @@ var App = function (_BaseApp) {
             var self = this;
             _axios2.default.get('/find/nearby', {
                 params: {
-                    openid: 'xxx',
-                    lng: 11,
-                    lat: 11,
+                    openid: self.urlParams.openid,
+                    accesstoken: self.urlParams.accesstoken,
+                    lng: self.myPoint.lng,
+                    lat: self.myPoint.lat,
                     type: type
                 }
             }).then(function (resp) {
