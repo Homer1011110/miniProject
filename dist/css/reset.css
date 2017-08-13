@@ -99,3 +99,7 @@ input, select {
 *, ::before, ::after {
     -webkit-tap-highlight-color:transparent;
 }
+
+.anchorBL {
+    display: none;
+}

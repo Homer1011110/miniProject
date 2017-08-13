@@ -87,22 +87,12 @@ class App extends BaseApp {
         })
     }
     renderMyPosition() {
-        // let self = this
-        // let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
-        // let marker = new BMap.Marker(point)
-        // let circle = new BMap.Circle(point, 1000)
-        // circle.setStrokeWeight(1)
-        // marker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
-        // self.map.addOverlay(marker)
-        // self.map.addOverlay(circle)
-        // self.map.panTo(point)
-
         let self = this
         let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
         self.myMarker && self.map.removeOverlay(self.myMarker)
         self.circle && self.map.removeOverlay(self.circle)
         self.circle = new BMap.Circle(point, 1000)
-        circle.setStrokeWeight(1)
+        self.circle.setStrokeWeight(1)
         self.myMarker = new BMap.Marker(point)
         self.myMarker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
         self.map.addOverlay(self.myMarker)
@@ -128,7 +118,7 @@ class App extends BaseApp {
 
 document.addEventListener('DOMContentLoaded', function() {
     FastClick.attach(document.body)
-    // let bridge = {}
+    let bridge = {}
     setupWebViewJavascriptBridge(function(bridge) {
         // webviewjavascriptbridge
         let app = new App(bridge)
