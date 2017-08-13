@@ -38,7 +38,7 @@ class App extends BaseApp {
         axios.get('/find/nearby', {
             params: {
                 openid: self.urlParams.openid,
-                accesstoken: self.urlParams.accesstoken,
+                access_token: self.urlParams.access_token,
                 lng: self.myPoint.lng,
                 lat: self.myPoint.lat,
                 type: type

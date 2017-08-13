@@ -3694,7 +3694,7 @@ var App = function (_BaseApp) {
             _axios2.default.get('/find/nearby', {
                 params: {
                     openid: self.urlParams.openid,
-                    accesstoken: self.urlParams.accesstoken,
+                    access_token: self.urlParams.access_token,
                     lng: self.myPoint.lng,
                     lat: self.myPoint.lat,
                     type: type
