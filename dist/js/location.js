@@ -3755,14 +3755,26 @@ var App = function (_BaseApp) {
     }, {
         key: 'renderMyPosition',
         value: function renderMyPosition() {
+            // let self = this
+            // let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
+            // let marker = new BMap.Marker(point)
+            // let circle = new BMap.Circle(point, 1000)
+            // circle.setStrokeWeight(1)
+            // marker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
+            // self.map.addOverlay(marker)
+            // self.map.addOverlay(circle)
+            // self.map.panTo(point)
+
             var self = this;
             var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
-            var marker = new BMap.Marker(point);
-            var circle = new BMap.Circle(point, 1000);
+            self.myMarker && self.map.removeOverlay(self.myMarker);
+            self.circle && self.map.removeOverlay(self.circle);
+            self.circle = new BMap.Circle(point, 1000);
             circle.setStrokeWeight(1);
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
-            self.map.addOverlay(marker);
-            self.map.addOverlay(circle);
+            self.myMarker = new BMap.Marker(point);
+            self.myMarker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
+            self.map.addOverlay(self.myMarker);
+            self.map.addOverlay(self.circle);
             self.map.panTo(point);
         }
     }, {
