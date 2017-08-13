@@ -1,3 +1,5 @@
+import $ from 'zeptojs'
+
 class RadioGroup {
     constructor($dom, activeRadioId='friends') {
         let self = this

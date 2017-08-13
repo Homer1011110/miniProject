@@ -20,6 +20,7 @@ time, mark, audio, video {
 }
 
 body {
+    font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
     line-height:1;
 }
 
@@ -93,4 +94,8 @@ hr {
 
 input, select {
     vertical-align:middle;
+}
+
+*, ::before, ::after {
+    -webkit-tap-highlight-color:transparent;
 }

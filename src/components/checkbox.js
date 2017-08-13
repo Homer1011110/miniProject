@@ -1,3 +1,5 @@
+import $ from 'zeptojs'
+
 class CheckBox {
     constructor($dom, checked=false) {
         let self = this

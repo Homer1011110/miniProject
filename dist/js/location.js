@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,8 +73,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(7);
-var isBuffer = __webpack_require__(29);
+var bind = __webpack_require__(9);
+var isBuffer = __webpack_require__(34);
 
 /*global toString:true*/
 
@@ -378,6 +378,32 @@ module.exports = {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    search2Map: function search2Map(searchString) {
+        // todo: detect param type
+        var map = {};
+        var index = searchString.indexOf('?');
+        searchString = searchString.substr(index + 1);
+        if (searchString.length <= 0) return map;
+        var paramArr = searchString.split('&');
+        paramArr.forEach(function (param) {
+            var arr = param.split('=');
+            map[arr[0]] = arr[1];
+        });
+        return map;
+    }
+};
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.4 - zepto event ajax form ie - zeptojs.com/license */
@@ -1962,14 +1988,44 @@ module.exports = Zepto
 
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+function setupWebViewJavascriptBridge(callback) {
+	if (window.WebViewJavascriptBridge) {
+		return callback(WebViewJavascriptBridge);
+	}
+	if (window.WVJBCallbacks) {
+		return window.WVJBCallbacks.push(callback);
+	}
+	window.WVJBCallbacks = [callback];
+	var WVJBIframe = document.createElement('iframe');
+	WVJBIframe.style.display = 'none';
+	// WVJBIframe.src = 'https://__bridge_loaded__';
+	WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+	document.documentElement.appendChild(WVJBIframe);
+	setTimeout(function () {
+		document.documentElement.removeChild(WVJBIframe);
+	}, 0);
+}
+
+exports.default = setupWebViewJavascriptBridge;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(24);
+var normalizeHeaderName = __webpack_require__(29);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -1985,10 +2041,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(3);
+    adapter = __webpack_require__(5);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(3);
+    adapter = __webpack_require__(5);
   }
   return adapter;
 }
@@ -2059,22 +2115,22 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(16);
-var buildURL = __webpack_require__(19);
-var parseHeaders = __webpack_require__(25);
-var isURLSameOrigin = __webpack_require__(23);
-var createError = __webpack_require__(6);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(18);
+var settle = __webpack_require__(21);
+var buildURL = __webpack_require__(24);
+var parseHeaders = __webpack_require__(30);
+var isURLSameOrigin = __webpack_require__(28);
+var createError = __webpack_require__(8);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(23);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -2171,7 +2227,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(21);
+      var cookies = __webpack_require__(26);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -2247,10 +2303,10 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2276,7 +2332,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2288,13 +2344,13 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(15);
+var enhanceError = __webpack_require__(20);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -2313,7 +2369,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2331,7 +2387,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -2521,22 +2577,191 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(10);
+module.exports = __webpack_require__(15);
 
 /***/ }),
-/* 10 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _zeptojs = __webpack_require__(2);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+var _util = __webpack_require__(1);
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var App = function () {
+    function App(bridge) {
+        _classCallCheck(this, App);
+
+        this.initVariables(bridge);
+        this.initMap();
+        this.bindEvent();
+        this.registerHandler();
+    }
+
+    _createClass(App, [{
+        key: 'initVariables',
+        value: function initVariables(bridge) {
+            var self = this;
+            self.bridge = bridge;
+            self.urlParams = _util2.default.search2Map(window.location.search);
+            self.myPoint = { lng: 116.404, lat: 39.915 };
+            self.map = new BMap.Map("map");
+        }
+    }, {
+        key: 'initMap',
+        value: function initMap() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            self.map.centerAndZoom(point, 15);
+
+            self.getCurrentPosition(function (_ref) {
+                var lng = _ref.lng,
+                    lat = _ref.lat;
+
+                self.myPoint = { lng: lng, lat: lat };
+                self.update('renderMyPosition');
+            });
+        }
+    }, {
+        key: 'getCurrentPosition',
+        value: function getCurrentPosition(cb) {
+            var self = this;
+            var geolocation = new BMap.Geolocation();
+
+            geolocation.getCurrentPosition(function (res) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    // cb 的 this 是否应该指向 app ?
+                    cb.call(self, res.point);
+                } else {
+                    alert('failed:' + this.getStatus());
+                }
+            });
+            /*
+                Note: getCurrentPosition() cannot work on insecure site origin
+            */
+        }
+    }, {
+        key: 'bindEvent',
+        value: function bindEvent() {}
+    }, {
+        key: 'renderMyPosition',
+        value: function renderMyPosition() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            var marker = new BMap.Marker(point);
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
+            self.map.addOverlay(marker);
+            self.map.panTo(point);
+        }
+    }, {
+        key: 'update',
+        value: function update(fnName) {
+            var self = this;
+            if (typeof self[fnName] == 'function') {
+                self[fnName]();
+            }
+        }
+    }, {
+        key: 'registerHandler',
+        value: function registerHandler() {}
+    }]);
+
+    return App;
+}();
+
+exports.default = App;
+
+/***/ }),
+/* 13 */,
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _zeptojs = __webpack_require__(2);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RadioGroup = function () {
+    function RadioGroup($dom) {
+        var activeRadioId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'friends';
+
+        _classCallCheck(this, RadioGroup);
+
+        var self = this;
+        this.$radios = $dom.find('.radio');
+        this.bindEvent();
+        $dom.find('[data-radio-id=' + activeRadioId + ']').addClass('radio-active');
+        setTimeout(function () {
+            self.onRadioChange(activeRadioId);
+        }, 1);
+    }
+
+    _createClass(RadioGroup, [{
+        key: 'bindEvent',
+        value: function bindEvent() {
+            var self = this;
+            this.$radios.on('click', function (e) {
+                var $this = (0, _zeptojs2.default)(this);
+                self.$radios.removeClass('radio-active');
+                $this.addClass('radio-active');
+                self.onRadioChange($this.attr('data-radio-id'));
+            });
+        }
+    }, {
+        key: 'changeRadio',
+        value: function changeRadio() {}
+    }, {
+        key: 'onRadioChange',
+        value: function onRadioChange(radioId) {}
+    }]);
+
+    return RadioGroup;
+}();
+
+exports.default = RadioGroup;
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(7);
-var Axios = __webpack_require__(12);
-var defaults = __webpack_require__(2);
+var bind = __webpack_require__(9);
+var Axios = __webpack_require__(17);
+var defaults = __webpack_require__(4);
 
 /**
  * Create an instance of Axios
@@ -2569,15 +2794,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(4);
-axios.CancelToken = __webpack_require__(11);
-axios.isCancel = __webpack_require__(5);
+axios.Cancel = __webpack_require__(6);
+axios.CancelToken = __webpack_require__(16);
+axios.isCancel = __webpack_require__(7);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(26);
+axios.spread = __webpack_require__(31);
 
 module.exports = axios;
 
@@ -2586,13 +2811,13 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 11 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(4);
+var Cancel = __webpack_require__(6);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -2650,18 +2875,18 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 12 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(4);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(13);
-var dispatchRequest = __webpack_require__(14);
-var isAbsoluteURL = __webpack_require__(22);
-var combineURLs = __webpack_require__(20);
+var InterceptorManager = __webpack_require__(18);
+var dispatchRequest = __webpack_require__(19);
+var isAbsoluteURL = __webpack_require__(27);
+var combineURLs = __webpack_require__(25);
 
 /**
  * Create a new instance of Axios
@@ -2743,7 +2968,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 13 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2802,16 +3027,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 14 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(17);
-var isCancel = __webpack_require__(5);
-var defaults = __webpack_require__(2);
+var transformData = __webpack_require__(22);
+var isCancel = __webpack_require__(7);
+var defaults = __webpack_require__(4);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -2888,7 +3113,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 15 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2916,13 +3141,13 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 16 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(6);
+var createError = __webpack_require__(8);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -2949,7 +3174,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 17 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2976,7 +3201,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 18 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3019,7 +3244,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 19 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3094,7 +3319,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 20 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3115,7 +3340,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 21 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3175,7 +3400,7 @@ module.exports = (
 
 
 /***/ }),
-/* 22 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3196,7 +3421,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3271,7 +3496,7 @@ module.exports = (
 
 
 /***/ }),
-/* 24 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3290,7 +3515,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 25 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3334,7 +3559,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 26 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3368,7 +3593,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 27 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3376,23 +3601,29 @@ module.exports = function spread(callback) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _axios = __webpack_require__(9);
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _axios = __webpack_require__(11);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _zeptojs = __webpack_require__(1);
+var _zeptojs = __webpack_require__(2);
 
 var _zeptojs2 = _interopRequireDefault(_zeptojs);
 
-var _util = __webpack_require__(30);
+var _baseApp = __webpack_require__(12);
+
+var _baseApp2 = _interopRequireDefault(_baseApp);
+
+var _util = __webpack_require__(1);
 
 var _util2 = _interopRequireDefault(_util);
 
-var _radiogroup = __webpack_require__(31);
+var _radiogroup = __webpack_require__(14);
 
 var _radiogroup2 = _interopRequireDefault(_radiogroup);
 
-var _jsBridge = __webpack_require__(32);
+var _jsBridge = __webpack_require__(3);
 
 var _jsBridge2 = _interopRequireDefault(_jsBridge);
 
@@ -3400,54 +3631,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var App = function () {
-    function App(bridge) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var App = function (_BaseApp) {
+    _inherits(App, _BaseApp);
+
+    function App() {
         _classCallCheck(this, App);
 
-        this.initVariables(bridge);
-        this.initBMap();
-        this.bindEvent();
+        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
     }
 
     _createClass(App, [{
         key: 'initVariables',
         value: function initVariables(bridge) {
-            this.bridge = bridge;
-            this.urlParams = _util2.default.search2Map(window.location.search);
-
-            this.UPDATE_POSITION = 1;
-            this.UPDATE_NEAR_POINTS = 2;
-
-            this.map = new BMap.Map("map");
+            _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'initVariables', this).call(this, bridge);
             this.radioGroup = new _radiogroup2.default((0, _zeptojs2.default)('#radio-group'), 'friends');
-            this.myPoint = { lng: 113.94289892826, lat: 22.5356489579 };
             this.nearPoints = [];
             this.nearMarkers = [];
         }
+        // initMap() {
+        //     super.initMap()
+        //     let self = this
+        //     self.map.addControl(new BMap.GeolocationControl())
+        // }
+
     }, {
         key: 'bindEvent',
         value: function bindEvent() {
+            _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'bindEvent', this).call(this);
             var self = this;
             this.radioGroup.onRadioChange = function (args) {
                 self.onRadioChange(args);
             };
-        }
-    }, {
-        key: 'initBMap',
-        value: function initBMap() {
-            var self = this;
-            var point = new BMap.Point(116.404, 39.915);
-            self.map.centerAndZoom(point, 15);
-
-            self.map.addControl(new BMap.GeolocationControl());
-
-            self.getCurrentPosition(function (_ref) {
-                var lng = _ref.lng,
-                    lat = _ref.lat;
-
-                self.myPoint = { lng: lng, lat: lat };
-                self.update(self.UPDATE_POSITION);
-            });
         }
     }, {
         key: 'onRadioChange',
@@ -3466,24 +3684,6 @@ var App = function () {
             self.bridge.callHandler('jumpToVideoWithMoment', momentID, function (responseData) {
                 console.log("JS received response:", responseData);
             });
-        }
-    }, {
-        key: 'getCurrentPosition',
-        value: function getCurrentPosition(cb) {
-            var self = this;
-            var geolocation = new BMap.Geolocation();
-
-            geolocation.getCurrentPosition(function (res) {
-                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                    // cb 的 this 是否应该指向 app ?
-                    cb.call(self, res.point);
-                } else {
-                    alert('failed:' + this.getStatus());
-                }
-            });
-            /*
-                Note: getCurrentPosition() cannot work on insecure site origin
-            */
         }
     }, {
         key: 'getNearbyMoments',
@@ -3505,12 +3705,13 @@ var App = function () {
                     moments: [{ lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }, { lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }, { lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234' }],
                     msg: 'xxx'
                 };
-                self.clearNearMarkers();
+
+                self.clearNearMarkers(); // should go in self.renderxxx
                 self.nearPoints = resp.moments;
-                self.nearMarkers = self.nearPoints.map(function (_ref2) {
-                    var lng = _ref2.lng,
-                        lat = _ref2.lat,
-                        momentID = _ref2.momentID;
+                self.nearMarkers = self.nearPoints.map(function (_ref) {
+                    var lng = _ref.lng,
+                        lat = _ref.lat,
+                        momentID = _ref.momentID;
 
                     var point = new BMap.Point(lng, lat);
                     var marker = new BMap.Marker(point);
@@ -3519,12 +3720,12 @@ var App = function () {
                     });
                     return marker;
                 });
-                self.update(self.UPDATE_NEAR_POINTS);
+                self.update('renderNearbyMoments');
             });
         }
     }, {
-        key: 'renderNearbyDots',
-        value: function renderNearbyDots() {
+        key: 'renderNearbyMoments',
+        value: function renderNearbyMoments() {
             var self = this;
             self.nearMarkers.forEach(function (marker) {
                 self.map.addOverlay(marker);
@@ -3553,27 +3754,10 @@ var App = function () {
             self.nearPoints = [];
             self.nearMarkers = [];
         }
-    }, {
-        key: 'update',
-        value: function update() {
-            var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null';
-
-            var self = this;
-            switch (type) {
-                case self.UPDATE_POSITION:
-                    self.renderMyPosition();
-                    break;
-                case self.UPDATE_NEAR_POINTS:
-                    self.renderNearbyDots();
-                    break;
-                default:
-                    break;
-            }
-        }
     }]);
 
     return App;
-}();
+}(_baseApp2.default);
 
 (0, _jsBridge2.default)(function (bridge) {
 
@@ -3583,21 +3767,18 @@ var App = function () {
         var app = new App(bridge);
     });
 
-    /*
-        register js handler
-    */
-    /*bridge.registerHandler('JS Echo', function(data, responseCallback) {
-    	console.log("JS Echo called with:", data)
-    	responseCallback(data)
-    })
-    bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-    	console.log("JS received response:", responseData)
-    })*/
+    // bridge.registerHandler('JS Echo', function(data, responseCallback) {
+    // 	console.log("JS Echo called with:", data)
+    // 	responseCallback(data)
+    // })
+    // bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
+    // 	console.log("JS received response:", responseData)
+    // })
 });
 
 /***/ }),
-/* 28 */,
-/* 29 */
+/* 33 */,
+/* 34 */
 /***/ (function(module, exports) {
 
 /*!
@@ -3622,115 +3803,6 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    search2Map: function search2Map(searchString) {
-        // todo: detect param type
-        var map = {};
-        var index = searchString.indexOf('?');
-        searchString = searchString.substr(index + 1);
-        if (searchString.length <= 0) return map;
-        var paramArr = searchString.split('&');
-        paramArr.forEach(function (param) {
-            var arr = param.split('=');
-            map[arr[0]] = arr[1];
-        });
-        return map;
-    }
-};
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var RadioGroup = function () {
-    function RadioGroup($dom) {
-        var activeRadioId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'friends';
-
-        _classCallCheck(this, RadioGroup);
-
-        var self = this;
-        this.$radios = $dom.find('.radio');
-        this.bindEvent();
-        $dom.find('[data-radio-id=' + activeRadioId + ']').addClass('radio-active');
-        setTimeout(function () {
-            self.onRadioChange(activeRadioId);
-        }, 1);
-    }
-
-    _createClass(RadioGroup, [{
-        key: 'bindEvent',
-        value: function bindEvent() {
-            var self = this;
-            this.$radios.on('click', function (e) {
-                var $this = $(this);
-                self.$radios.removeClass('radio-active');
-                $this.addClass('radio-active');
-                self.onRadioChange($this.attr('data-radio-id'));
-            });
-        }
-    }, {
-        key: 'changeRadio',
-        value: function changeRadio() {}
-    }, {
-        key: 'onRadioChange',
-        value: function onRadioChange(radioId) {}
-    }]);
-
-    return RadioGroup;
-}();
-
-exports.default = RadioGroup;
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-function setupWebViewJavascriptBridge(callback) {
-	if (window.WebViewJavascriptBridge) {
-		return callback(WebViewJavascriptBridge);
-	}
-	if (window.WVJBCallbacks) {
-		return window.WVJBCallbacks.push(callback);
-	}
-	window.WVJBCallbacks = [callback];
-	var WVJBIframe = document.createElement('iframe');
-	WVJBIframe.style.display = 'none';
-	WVJBIframe.src = 'https://__bridge_loaded__';
-	document.documentElement.appendChild(WVJBIframe);
-	setTimeout(function () {
-		document.documentElement.removeChild(WVJBIframe);
-	}, 0);
-}
-
-exports.default = setupWebViewJavascriptBridge;
 
 /***/ })
 /******/ ]);

@@ -63,12 +63,215 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 33);
 /******/ })
 /************************************************************************/
 /******/ ({
 
 /***/ 1:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    search2Map: function search2Map(searchString) {
+        // todo: detect param type
+        var map = {};
+        var index = searchString.indexOf('?');
+        searchString = searchString.substr(index + 1);
+        if (searchString.length <= 0) return map;
+        var paramArr = searchString.split('&');
+        paramArr.forEach(function (param) {
+            var arr = param.split('=');
+            map[arr[0]] = arr[1];
+        });
+        return map;
+    }
+};
+
+/***/ }),
+
+/***/ 12:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _zeptojs = __webpack_require__(2);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+var _util = __webpack_require__(1);
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var App = function () {
+    function App(bridge) {
+        _classCallCheck(this, App);
+
+        this.initVariables(bridge);
+        this.initMap();
+        this.bindEvent();
+        this.registerHandler();
+    }
+
+    _createClass(App, [{
+        key: 'initVariables',
+        value: function initVariables(bridge) {
+            var self = this;
+            self.bridge = bridge;
+            self.urlParams = _util2.default.search2Map(window.location.search);
+            self.myPoint = { lng: 116.404, lat: 39.915 };
+            self.map = new BMap.Map("map");
+        }
+    }, {
+        key: 'initMap',
+        value: function initMap() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            self.map.centerAndZoom(point, 15);
+
+            self.getCurrentPosition(function (_ref) {
+                var lng = _ref.lng,
+                    lat = _ref.lat;
+
+                self.myPoint = { lng: lng, lat: lat };
+                self.update('renderMyPosition');
+            });
+        }
+    }, {
+        key: 'getCurrentPosition',
+        value: function getCurrentPosition(cb) {
+            var self = this;
+            var geolocation = new BMap.Geolocation();
+
+            geolocation.getCurrentPosition(function (res) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    // cb 的 this 是否应该指向 app ?
+                    cb.call(self, res.point);
+                } else {
+                    alert('failed:' + this.getStatus());
+                }
+            });
+            /*
+                Note: getCurrentPosition() cannot work on insecure site origin
+            */
+        }
+    }, {
+        key: 'bindEvent',
+        value: function bindEvent() {}
+    }, {
+        key: 'renderMyPosition',
+        value: function renderMyPosition() {
+            var self = this;
+            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
+            var marker = new BMap.Marker(point);
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
+            self.map.addOverlay(marker);
+            self.map.panTo(point);
+        }
+    }, {
+        key: 'update',
+        value: function update(fnName) {
+            var self = this;
+            if (typeof self[fnName] == 'function') {
+                self[fnName]();
+            }
+        }
+    }, {
+        key: 'registerHandler',
+        value: function registerHandler() {}
+    }]);
+
+    return App;
+}();
+
+exports.default = App;
+
+/***/ }),
+
+/***/ 13:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _zeptojs = __webpack_require__(2);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CheckBox = function () {
+    function CheckBox($dom) {
+        var checked = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+        _classCallCheck(this, CheckBox);
+
+        var self = this;
+        self.$dom = $dom;
+        self.checked = checked;
+        self.bindEvent();
+        setTimeout(function () {
+            self.onChange(self.checked);
+        }, 1);
+    }
+
+    _createClass(CheckBox, [{
+        key: 'bindEvent',
+        value: function bindEvent() {
+            var self = this;
+            self.$dom.on('click', function () {
+                self.checked = !self.checked;
+                self.update();
+                self.onChange(self.checked);
+            });
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            var self = this;
+            if (self.checked) {
+                self.$dom.addClass('active');
+            } else {
+                self.$dom.removeClass('active');
+            }
+        }
+    }, {
+        key: 'onChange',
+        value: function onChange(checked) {}
+    }]);
+
+    return CheckBox;
+}();
+
+exports.default = CheckBox;
+
+/***/ }),
+
+/***/ 2:
 /***/ (function(module, exports) {
 
 /* Zepto v1.1.4 - zepto event ajax form ie - zeptojs.com/license */
@@ -1654,200 +1857,7 @@ module.exports = Zepto
 
 /***/ }),
 
-/***/ 28:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _zeptojs = __webpack_require__(1);
-
-var _zeptojs2 = _interopRequireDefault(_zeptojs);
-
-var _checkbox = __webpack_require__(33);
-
-var _checkbox2 = _interopRequireDefault(_checkbox);
-
-var _util = __webpack_require__(30);
-
-var _util2 = _interopRequireDefault(_util);
-
-var _jsBridge = __webpack_require__(32);
-
-var _jsBridge2 = _interopRequireDefault(_jsBridge);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var App = function () {
-    function App(bridge) {
-        _classCallCheck(this, App);
-
-        this.initVariables(bridge);
-        this.initMap();
-        this.bindEvent();
-    }
-
-    _createClass(App, [{
-        key: 'initMap',
-        value: function initMap() {
-            var self = this;
-            var point = new BMap.Point(116.404, 39.915);
-            self.map.centerAndZoom(point, 15);
-
-            self.getCurrentPosition(function (_ref) {
-                var lng = _ref.lng,
-                    lat = _ref.lat;
-
-                console.log(lng, lat);
-                self.myPoint = { lng: lng, lat: lat };
-                self.update(self.UPDATE_POSITION);
-            });
-        }
-    }, {
-        key: 'getCurrentPosition',
-        value: function getCurrentPosition(cb) {
-            var self = this;
-            var geolocation = new BMap.Geolocation();
-
-            geolocation.getCurrentPosition(function (res) {
-                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                    // cb 的 this 是否应该指向 app ?
-                    cb.call(self, res.point);
-                } else {
-                    alert('failed:' + this.getStatus());
-                }
-            });
-            /*
-                Note: getCurrentPosition() cannot work on insecure site origin
-            */
-        }
-    }, {
-        key: 'initVariables',
-        value: function initVariables(bridge) {
-            var self = this;
-            self.bridge = bridge;
-
-            self.UPDATE_POSITION = 1;
-
-            self.dingCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#ding'));
-            self.addMineCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#add-mine'));
-            self.addAllCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#add-all'));
-            self.shareFriendCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#share-friends'));
-
-            self.map = new BMap.Map("map");
-            self.myPoint = {};
-        }
-    }, {
-        key: 'bindEvent',
-        value: function bindEvent() {}
-    }, {
-        key: 'renderMyPosition',
-        value: function renderMyPosition() {
-            var self = this;
-            var point = new BMap.Point(self.myPoint.lng, self.myPoint.lat);
-            var marker = new BMap.Marker(point);
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); // not work in phone
-            self.map.addOverlay(marker);
-            self.map.panTo(point);
-        }
-    }, {
-        key: 'update',
-        value: function update() {
-            var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null';
-
-            var self = this;
-            switch (type) {
-                case self.UPDATE_POSITION:
-                    self.renderMyPosition();
-                default:
-                    break;
-            }
-        }
-    }, {
-        key: 'registerHandler',
-        value: function registerHandler() {
-            var self = this;
-            self.bridge.registerHandler('getPublishFormData', function (data, responseCallback) {
-                console.log("getPublishFormData called with:", data);
-                responseCallback({
-                    lat: self.myPoint.lat,
-                    lng: self.myPoint.lng,
-                    ding: self.dingCheckBox.checked,
-                    addMine: self.addMineCheckBox.checked,
-                    addAll: self.addAllCheckBox.checked
-                });
-            });
-        }
-    }]);
-
-    return App;
-}();
-
-/*bridge.registerHandler("getPublishFormData", function(data, responseCallback) {
-    responseCallback({
-        lat: 10,
-        lng: 10,
-        ding: true,
-        addMine: true,
-        addAll: true
-    })
-})*/
-
-
-(0, _jsBridge2.default)(function (bridge) {
-
-    /* Initialize your app here */
-    document.addEventListener("DOMContentLoaded", function () {
-        // DOM fully loaded and parsed
-        var app = new App(bridge);
-    });
-
-    /*
-        register js handler
-    */
-    /*bridge.registerHandler('JS Echo', function(data, responseCallback) {
-    	console.log("JS Echo called with:", data)
-    	responseCallback(data)
-    })
-    bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-    	console.log("JS received response:", responseData)
-    })*/
-});
-
-/***/ }),
-
-/***/ 30:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    search2Map: function search2Map(searchString) {
-        // todo: detect param type
-        var map = {};
-        var index = searchString.indexOf('?');
-        searchString = searchString.substr(index + 1);
-        if (searchString.length <= 0) return map;
-        var paramArr = searchString.split('&');
-        paramArr.forEach(function (param) {
-            var arr = param.split('=');
-            map[arr[0]] = arr[1];
-        });
-        return map;
-    }
-};
-
-/***/ }),
-
-/***/ 32:
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1866,7 +1876,8 @@ function setupWebViewJavascriptBridge(callback) {
 	window.WVJBCallbacks = [callback];
 	var WVJBIframe = document.createElement('iframe');
 	WVJBIframe.style.display = 'none';
-	WVJBIframe.src = 'https://__bridge_loaded__';
+	// WVJBIframe.src = 'https://__bridge_loaded__';
+	WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
 	document.documentElement.appendChild(WVJBIframe);
 	setTimeout(function () {
 		document.documentElement.removeChild(WVJBIframe);
@@ -1883,58 +1894,110 @@ exports.default = setupWebViewJavascriptBridge;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _zeptojs = __webpack_require__(2);
+
+var _zeptojs2 = _interopRequireDefault(_zeptojs);
+
+var _checkbox = __webpack_require__(13);
+
+var _checkbox2 = _interopRequireDefault(_checkbox);
+
+var _baseApp = __webpack_require__(12);
+
+var _baseApp2 = _interopRequireDefault(_baseApp);
+
+var _util = __webpack_require__(1);
+
+var _util2 = _interopRequireDefault(_util);
+
+var _jsBridge = __webpack_require__(3);
+
+var _jsBridge2 = _interopRequireDefault(_jsBridge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var CheckBox = function () {
-    function CheckBox($dom) {
-        var checked = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-        _classCallCheck(this, CheckBox);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-        var self = this;
-        self.$dom = $dom;
-        self.checked = checked;
-        self.bindEvent();
-        setTimeout(function () {
-            self.onChange(self.checked);
-        }, 1);
+var App = function (_BaseApp) {
+    _inherits(App, _BaseApp);
+
+    function App() {
+        _classCallCheck(this, App);
+
+        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
     }
 
-    _createClass(CheckBox, [{
-        key: 'bindEvent',
-        value: function bindEvent() {
+    _createClass(App, [{
+        key: 'initVariables',
+        value: function initVariables(bridge) {
+            _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'initVariables', this).call(this);
             var self = this;
-            self.$dom.on('click', function () {
-                self.checked = !self.checked;
-                self.update();
-                self.onChange(self.checked);
+
+            self.dingCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#ding'));
+            self.addMineCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#add-mine'));
+            self.addAllCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#add-all'));
+            self.shareFriendCheckBox = new _checkbox2.default((0, _zeptojs2.default)('#share-friends'));
+        }
+    }, {
+        key: 'initMap',
+        value: function initMap() {
+            var self = this;
+            var point = new BMap.Point(116.404, 39.915);
+            self.map.centerAndZoom(point, 15);
+
+            self.getCurrentPosition(function (_ref) {
+                var lng = _ref.lng,
+                    lat = _ref.lat;
+
+                console.log(lng, lat);
+                self.myPoint = { lng: lng, lat: lat };
+                self.update('renderMyPosition');
             });
         }
     }, {
-        key: 'update',
-        value: function update() {
+        key: 'registerHandler',
+        value: function registerHandler() {
             var self = this;
-            if (self.checked) {
-                self.$dom.addClass('active');
-            } else {
-                self.$dom.removeClass('active');
-            }
+            // self.bridge.registerHandler('getPublishFormData', function(data, responseCallback) {
+            //     console.log("getPublishFormData called with:", data)
+            //     responseCallback({
+            //         lat: self.myPoint.lat,
+            //         lng: self.myPoint.lng,
+            //         ding: self.dingCheckBox.checked,
+            //         addMine: self.addMineCheckBox.checked,
+            //         addAll: self.addAllCheckBox.checked,
+            //     })
+            // })
         }
-    }, {
-        key: 'onChange',
-        value: function onChange(checked) {}
     }]);
 
-    return CheckBox;
-}();
+    return App;
+}(_baseApp2.default);
 
-exports.default = CheckBox;
+(0, _jsBridge2.default)(function (bridge) {
+
+    /* Initialize your app here */
+    document.addEventListener("DOMContentLoaded", function () {
+        // DOM fully loaded and parsed
+        var app = new App(bridge);
+    });
+
+    // bridge.registerHandler('JS Echo', function(data, responseCallback) {
+    // 	console.log("JS Echo called with:", data)
+    // 	responseCallback(data)
+    // })
+    // bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
+    // 	console.log("JS received response:", responseData)
+    // })
+});
 
 /***/ })
 
