@@ -105,10 +105,10 @@ class App extends BaseApp {
 setupWebViewJavascriptBridge(function(bridge) {
 	
     /* Initialize your app here */
-    document.addEventListener("DOMContentLoaded", function() {
+    
         // DOM fully loaded and parsed
         let app = new App(bridge)
-    })
+    
 
 	// bridge.registerHandler('JS Echo', function(data, responseCallback) {
 	// 	console.log("JS Echo called with:", data)

@@ -1985,10 +1985,9 @@ var App = function (_BaseApp) {
 (0, _jsBridge2.default)(function (bridge) {
 
     /* Initialize your app here */
-    document.addEventListener("DOMContentLoaded", function () {
-        // DOM fully loaded and parsed
-        var app = new App(bridge);
-    });
+
+    // DOM fully loaded and parsed
+    var app = new App(bridge);
 
     // bridge.registerHandler('JS Echo', function(data, responseCallback) {
     // 	console.log("JS Echo called with:", data)
