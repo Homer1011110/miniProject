@@ -44,24 +44,25 @@ class App extends BaseApp {
                 type: type
             }
         }).then((resp)=> {
-            let resp = {
-                ret: 0,
-                data: {
-                    moments: [
-                        {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                        {lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
-                    ],    
-                },
-                msg: 'xxx'
-            }
             self.resp2Action(resp.data)
         }).catch((err)=> {
             console.log(err)
             alert(err)
+            self.resp2Action()
         })
     }
     resp2Action(resp) {
+        resp = {
+            ret: 0,
+            data: {
+                moments: [
+                    {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                    {lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                    {lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                ],    
+            },
+            msg: 'xxx'
+        }
         let self = this
         switch(resp.ret) {
             case -6:
@@ -78,6 +79,7 @@ class App extends BaseApp {
         }
     }
     _renderNearbyMoments(data) {
+        let self = this
         self.clearNearMarkers() // should go in self.renderxxx
         self.nearPoints = data.moments
         self.nearMarkers = self.nearPoints.map(({lng, lat, momentID})=> {
@@ -101,7 +103,7 @@ class App extends BaseApp {
         let point = new BMap.Point(self.myPoint.lng, self.myPoint.lat)
         self.myMarker && self.map.removeOverlay(self.myMarker)
         self.circle && self.map.removeOverlay(self.circle)
-        self.circle = new BMap.Circle(point, 1000)
+        self.circle = new BMap.Circle(point, 1300)
         self.circle.setStrokeWeight(1)
         self.myMarker = new BMap.Marker(point)
         self.myMarker.setAnimation(BMAP_ANIMATION_BOUNCE) // not work in phone
@@ -129,10 +131,10 @@ class App extends BaseApp {
 document.addEventListener('DOMContentLoaded', function() {
     FastClick.attach(document.body)
     let bridge = {}
-    setupWebViewJavascriptBridge(function(bridge) {
+    // setupWebViewJavascriptBridge(function(bridge) {
         // webviewjavascriptbridge
         let app = new App(bridge)
-    })
+    // })
 })
 
 window.onerror = function(err) {
