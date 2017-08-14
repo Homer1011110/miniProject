@@ -32,16 +32,14 @@ const config = {
             {from: "./src/css", to: "../css"}
         ])
     ],
-    devServer: {
-        host: "0.0.0.0",
-        contentBase: "./dist",
-        port: 8088,
-        colors: true,
-        compress: true,
-        disableHostCheck: true,
-
-        
-    }
+    // devServer: {
+    //     host: "0.0.0.0",
+    //     contentBase: "./dist",
+    //     port: 8088,
+    //     colors: true,
+    //     compress: true,
+    //     disableHostCheck: true,
+    // }
 }
 
 module.exports = config

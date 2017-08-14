@@ -44,6 +44,17 @@ class App extends BaseApp {
                 type: type
             }
         }).then((resp)=> {
+            let resp = {
+                ret: 0,
+                data: {
+                    moments: [
+                        {lng: 113.94289892826, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94389292428, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                        {lng: 113.94489292430, lat: 22.5356489579, openID: 'xxxx', momnetID: '1234'},
+                    ],    
+                },
+                msg: 'xxx'
+            }
             self.resp2Action(resp.data)
         }).catch((err)=> {
             console.log(err)
@@ -63,7 +74,7 @@ class App extends BaseApp {
                 self.showReminder('您尚未登录，请登录后再试')
                 break
             case 0:
-                self._renderNearbyMoments(data)
+                self._renderNearbyMoments(resp.data)
         }
     }
     _renderNearbyMoments(data) {
