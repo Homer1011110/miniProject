@@ -131,10 +131,10 @@ class App extends BaseApp {
 document.addEventListener('DOMContentLoaded', function() {
     FastClick.attach(document.body)
     let bridge = {}
-    // setupWebViewJavascriptBridge(function(bridge) {
+    setupWebViewJavascriptBridge(function(bridge) {
         // webviewjavascriptbridge
         let app = new App(bridge)
-    // })
+    })
 })
 
 window.onerror = function(err) {

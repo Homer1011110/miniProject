@@ -3801,10 +3801,10 @@ var App = function (_BaseApp) {
 document.addEventListener('DOMContentLoaded', function () {
     FastClick.attach(document.body);
     var bridge = {};
-    // setupWebViewJavascriptBridge(function(bridge) {
-    // webviewjavascriptbridge
-    var app = new App(bridge);
-    // })
+    (0, _jsBridge2.default)(function (bridge) {
+        // webviewjavascriptbridge
+        var app = new App(bridge);
+    });
 });
 
 window.onerror = function (err) {
